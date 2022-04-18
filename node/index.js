@@ -9,6 +9,8 @@ const config = {
 };
 const mysql = require('mysql')
 const connection = mysql.createConnection(config)
+let sql = `INSERT INTO people(name) values ('Kelvin')`
+connection.query(sql)
 
 app.get('/', (req,res) => {
     const number = Math.floor(Math.random() * (1000)) + 1

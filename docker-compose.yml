@@ -6,24 +6,28 @@ services:
         context: ./node
         dockerfile: Dockerfile
     container_name: app
+    command: dockerize -wait tcp://db:3306 -timeout 20s node index
     networks:
       - myapp-network
     volumes:
       - ./node:/usr/src/app
     tty: true
+    expose:
+      - "3000"
     depends_on:
       - db
   db:
-    image: mysql:5.7
-    command: --innodb-use-native-aio=0
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
     container_name: db
     restart: always
-    tty: true
     volumes:
-      - ./mysql:/var/lib/mysql
+      - mysql:/var/lib/mysql
+      - ./mysql/create_table.sql:/docker-entrypoint-initdb.d/create_table.sql
+    tty: true
     environment:
-      - MYSQL_DATABASE=nodedb
-      - MYSQL_ROOT_PASSWORD=teste
+      MYSQL_ROOT_PASSWORD: teste
+      MYSQL_DATABASE: nodedb
     networks:
       - myapp-network
   nginx:
@@ -41,4 +45,6 @@ services:
 networks:
   myapp-network:
     driver: bridge
-
+volumes:
+  mysql:
+  node:
