@@ -4,9 +4,10 @@ services:
   app:
     build:
         context: ./node
-        dockerfile: Dockerfile
     container_name: app
-    command: dockerize -wait tcp://db:3306 -timeout 20s node index
+    entrypoint: dockerize -wait tcp://db:3306 -timeout 120s docker-entrypoint.sh
+    command: node index
+    restart: always
     networks:
       - myapp-network
     volumes:
@@ -18,7 +19,8 @@ services:
       - db
   db:
     image: mysql
-    command: --default-authentication-plugin=mysql_native_password
+    command:
+      - --default-authentication-plugin=mysql_native_password
     container_name: db
     restart: always
     volumes:
