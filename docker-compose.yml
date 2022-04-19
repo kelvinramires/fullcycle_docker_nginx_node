@@ -12,6 +12,7 @@ services:
       - myapp-network
     volumes:
       - ./node:/usr/src/app
+      - node_modules:/usr/src/app/node_modules
     tty: true
     expose:
       - "3000"
@@ -50,3 +51,4 @@ networks:
 volumes:
   mysql:
   node:
+  node_modules:
